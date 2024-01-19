@@ -1,0 +1,81 @@
+import { NextResponse } from 'next/server'
+
+import { ChatOpenAI } from '@langchain/openai'
+import { OpenAIEmbeddings } from '@langchain/openai'
+import { MemoryVectorStore } from 'langchain/vectorstores/memory'
+import {
+	SupportedTextSplitterLanguages,
+	RecursiveCharacterTextSplitter,
+} from 'langchain/text_splitter'
+import { MarkdownTextSplitter } from 'langchain/text_splitter'
+import { CheerioWebBaseLoader } from 'langchain/document_loaders/web/cheerio'
+
+import { createStuffDocumentsChain } from 'langchain/chains/combine_documents'
+import { ChatPromptTemplate } from '@langchain/core/prompts'
+import { createRetrievalChain } from 'langchain/chains/retrieval'
+
+import { createHistoryAwareRetriever } from 'langchain/chains/history_aware_retriever'
+import { MessagesPlaceholder } from '@langchain/core/prompts'
+
+import { HumanMessage, AIMessage } from '@langchain/core/messages'
+export async function GET(req, res) {
+	const chatModel = new ChatOpenAI({})
+	const embeddings = new OpenAIEmbeddings()
+
+	const loader = new CheerioWebBaseLoader(
+		'https://js.langchain.com/docs/get_started/quickstart'
+	)
+	const docs = await loader.load()
+
+	const splitter = RecursiveCharacterTextSplitter.fromLanguage('markdown', {
+		chunkSize: 400,
+		chunkOverlap: 20,
+	})
+	const splitDocs = await splitter.splitDocuments(docs)
+
+	const vectorstore = await MemoryVectorStore.fromDocuments(splitDocs, embeddings)
+
+	const retriever = vectorstore.asRetriever()
+
+	const historyAwarePrompt = ChatPromptTemplate.fromMessages([
+		new MessagesPlaceholder('chat_history'),
+		['user', '{input}'],
+		[
+			'user',
+			'Given the above conversation, generate a search query to look up in order to get information relevant to the conversation',
+		],
+	])
+
+	const historyAwareRetrieverChain = await createHistoryAwareRetriever({
+		llm: chatModel,
+		retriever,
+		rephrasePrompt: historyAwarePrompt,
+	})
+
+	const historyAwareRetrievalPrompt = ChatPromptTemplate.fromMessages([
+		['system', "Answer the user's questions based on the below context:\n\n{context}"],
+		new MessagesPlaceholder('chat_history'),
+		['user', '{input}'],
+	])
+
+	const historyAwareCombineDocsChain = await createStuffDocumentsChain({
+		llm: chatModel,
+		prompt: historyAwareRetrievalPrompt,
+	})
+
+	const conversationalRetrievalChain = await createRetrievalChain({
+		retriever: historyAwareRetrieverChain,
+		combineDocsChain: historyAwareCombineDocsChain,
+	})
+	const result2 = await conversationalRetrievalChain.invoke({
+		chat_history: [
+			new HumanMessage('Do you know how to use CheerioWebBaseLoader in langchain?'),
+			new AIMessage('Yes!'),
+		],
+		input: 'Please write some code? and explain it to me in details.',
+	})
+
+	const result = result2.answer
+
+	return NextResponse.json({ message: 'hello world', result })
+}

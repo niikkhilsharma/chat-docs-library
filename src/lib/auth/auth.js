@@ -7,7 +7,9 @@ import prisma from '../database/prisma'
 
 export const authOptions = {
 	adapter: PrismaAdapter(prisma),
-
+	session: {
+		strategy: 'jwt',
+	},
 	providers: [
 		GithubProvider({
 			clientId: process.env.GITHUB_APP_CLIENT_ID,
@@ -20,8 +22,22 @@ export const authOptions = {
 	],
 
 	callbacks: {
+		async jwt({ token }) {
+			const dbUser = await prisma.user.findUnique({
+				where: {
+					email: token.email,
+				},
+			})
+
+			token.isAdmin = Boolean(dbUser?.isAdmin)
+			token.id = dbUser?.id
+
+			return token
+		},
 		async session({ session, token, user }) {
-			session.user.id = user.id
+			session.user.id = token.id
+			session.user.isAdmin = token.isAdmin
+			// console.log(session)
 			return session
 		},
 	},
