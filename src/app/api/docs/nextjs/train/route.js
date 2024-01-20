@@ -11,6 +11,10 @@ import path from 'path'
 import prisma from '@/lib/database/prisma'
 
 export async function GET() {
+	return NextResponse.json({
+		message:
+			"You've already trained the chatbot please remove the return line to re-train it. And also remember database already has the trained embeddings and if you'll re-train it without deleting the previous embeddings then it will create same double embeddings. So please delete the previous embeddings from the database. And also delete the details from the embeddingList collection.",
+	})
 	const client = new MongoClient(process.env.DATABASE_URL || '')
 
 	const dbName = 'chat-docs-library'

@@ -5,6 +5,9 @@ import { MongoClient } from 'mongodb'
 import { NextResponse } from 'next/server'
 
 export async function GET() {
+	return NextResponse.json({
+		message: 'This code is just querying the DB. The final code is in query/route.js',
+	})
 	const client = new MongoClient(process.env.DATABASE_URL)
 
 	const dbName = 'chat-docs-library'
