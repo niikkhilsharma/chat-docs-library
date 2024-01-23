@@ -12,13 +12,24 @@ import { createRetrievalChain } from 'langchain/chains/retrieval'
 import { HumanMessage, AIMessage } from '@langchain/core/messages'
 
 import { NextResponse } from 'next/server'
+import { redirect } from 'next/navigation'
 
 import prisma from '@/lib/database/prisma'
+import { streamAndSaveMessage } from '@/utils/chatPage'
+import { cookies } from 'next/headers'
 
-export async function POST(req) {
-	let { conversationTitle, userQuestion, conversationId } = await req.json()
+export async function POST(req, res) {
+	let { messages } = await req.json()
 	const userId = '65a6d70c998834f0dafc8786'
 
+	const cookieStore = cookies()
+	let conversationId = cookieStore.get('conversationId')
+	console.log(conversationId)
+
+	conversationId ? (conversationId = conversationId.value) : null
+	console.log(conversationId)
+
+	let userQuestion = messages[messages.length - 1].content
 	if (!userQuestion) {
 		return NextResponse.json(
 			{
@@ -28,16 +39,35 @@ export async function POST(req) {
 		)
 	}
 
-	if (!conversationTitle) {
-		conversationTitle = userQuestion.slice(0, 10)
+	if (conversationId) {
+		const prevConversation = await prisma.Conversation.findUnique({
+			where: {
+				id: conversationId,
+			},
+		})
+		if (!prevConversation) {
+			console.log('running this')
+			cookieStore.delete('conversationId')
+			return redirect('https://nextjs.org/')
+		}
+	} else {
+		const newConversation = await prisma.Conversation.create({
+			data: {
+				title: userQuestion.slice(0, 20),
+				userId: userId,
+				chatDocsCollectionName: 'NextJs',
+			},
+		})
+		conversationId = newConversation.id
 	}
 
-	const chatModel = new ChatOpenAI({ temperature: 0, streaming: true })
+	const chatModel = new ChatOpenAI({
+		temperature: 0,
+		streaming: true,
+	})
 
 	const client = new MongoClient(process.env.DATABASE_URL)
-	const dbName = 'chat-docs-library'
-	const collectionName = 'NextJs'
-	const collection = client.db(dbName).collection(collectionName)
+	const collection = client.db('chat-docs-library').collection('NextJs')
 
 	const vectorStore = new MongoDBAtlasVectorSearch(new OpenAIEmbeddings(), {
 		collection,
@@ -66,81 +96,45 @@ export async function POST(req) {
 		new MessagesPlaceholder('chat_history'),
 		['user', '{input}'],
 	])
+
 	const historyAwareCombineDocsChain = await createStuffDocumentsChain({
 		llm: chatModel,
 		prompt: historyAwareRetrievalPrompt,
 	})
+
 	const conversationalRetrievalChain = await createRetrievalChain({
 		retriever: historyAwareRetrieverChain,
 		combineDocsChain: historyAwareCombineDocsChain,
 	})
 
 	let chatHistory = []
-	let isConversationExists = false
 
-	if (conversationId) {
-		const validConversationId = await prisma.Conversation.findUnique({
-			where: {
-				id: conversationId,
-			},
-		})
-		if (validConversationId) {
-			isConversationExists = true
+	const messageWithoutLastUserQuestion = messages.slice(0, messages.length - 1)
 
-			const conversationMessages = await prisma.Message.findMany({
-				where: {
-					conversationId: conversationId,
-				},
-			})
-			console.log(conversationMessages)
+	messageWithoutLastUserQuestion.forEach(mssg => {
+		mssg.role === 'user'
+			? chatHistory.push(new HumanMessage(mssg.content))
+			: chatHistory.push(new AIMessage(mssg.content))
+	})
 
-			conversationMessages.forEach(mssg => {
-				chatHistory.push(new HumanMessage(mssg.humanMessage))
-				chatHistory.push(new AIMessage(mssg.aiMessage))
-			})
-		}
-	}
-
-	const result = await conversationalRetrievalChain.invoke({
+	const result = await conversationalRetrievalChain.stream({
 		chat_history: chatHistory,
 		input: userQuestion,
 	})
 
-	if (isConversationExists) {
-		const newMessage = await prisma.Message.create({
-			data: {
-				conversationId: conversationId,
-				humanMessage: userQuestion,
-				aiMessage: result.answer,
-			},
-		})
-		console.log(newMessage)
-	} else {
-		const newConversation = await prisma.Conversation.create({
-			data: {
-				title: conversationTitle,
-				userId: userId,
-				chatDocsCollectionName: 'NextJs',
-				messages: {
-					create: [
-						{
-							humanMessage: userQuestion,
-							aiMessage: result.answer,
-						},
-					],
-				},
-			},
-		})
+	const streamedResult = await streamAndSaveMessage(
+		result,
+		conversationId,
+		userQuestion,
+		client
+	)
 
-		conversationId = newConversation.id
-	}
+	// await client.close()
 
-	await prisma.$disconnect()
-	await client.close()
+	cookies().set('conversationId', conversationId)
+	return new Response(streamedResult)
 
-	return NextResponse.json({
-		conversationId: conversationId,
-		conversationTitle: conversationTitle,
-		answer: result.answer,
-	})
+	// return NextResponse.json({
+	// 	conversationId: conversationId,
+	// })
 }
