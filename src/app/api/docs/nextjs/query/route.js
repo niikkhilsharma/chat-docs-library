@@ -12,24 +12,19 @@ import { createRetrievalChain } from 'langchain/chains/retrieval'
 import { HumanMessage, AIMessage } from '@langchain/core/messages'
 
 import { NextResponse } from 'next/server'
-import { redirect } from 'next/navigation'
 
 import prisma from '@/lib/database/prisma'
 import { streamAndSaveMessage } from '@/utils/chatPage'
-import { cookies } from 'next/headers'
 
 export async function POST(req, res) {
-	let { messages } = await req.json()
+	let { messages, anonymousId } = await req.json()
 	const userId = '65a6d70c998834f0dafc8786'
 
-	const cookieStore = cookies()
-	let conversationId = cookieStore.get('conversationId')
-	console.log(conversationId)
-
-	conversationId ? (conversationId = conversationId.value) : null
-	console.log(conversationId)
+	//conversation Id is being called anoyomousId on frontend.
+	let conversationId = anonymousId
 
 	let userQuestion = messages[messages.length - 1].content
+
 	if (!userQuestion) {
 		return NextResponse.json(
 			{
@@ -39,27 +34,30 @@ export async function POST(req, res) {
 		)
 	}
 
+	// This is the id of the conversation model in the database. It is being used to identify the chat history of the user wrt to same conversation.
+	let conversationModelId
+
 	if (conversationId) {
 		const prevConversation = await prisma.Conversation.findUnique({
 			where: {
-				id: conversationId,
+				conversationId: conversationId,
 			},
 		})
+		console.log(prevConversation)
 		if (!prevConversation) {
-			console.log('running this')
-			cookieStore.delete('conversationId')
-			return redirect('https://nextjs.org/')
+			const newConversation = await prisma.Conversation.create({
+				data: {
+					title: userQuestion.slice(0, 20),
+					userId: userId,
+					chatDocsCollectionName: 'NextJs',
+					conversationId: conversationId,
+				},
+			})
+			conversationModelId = newConversation.id
+		} else {
+			conversationModelId = prevConversation.id
 		}
-	} else {
-		const newConversation = await prisma.Conversation.create({
-			data: {
-				title: userQuestion.slice(0, 20),
-				userId: userId,
-				chatDocsCollectionName: 'NextJs',
-			},
-		})
-		conversationId = newConversation.id
-	}
+	} else { return NextResponse.json({ message: 'Please provide the conversationId' }, { status: 400 }) }
 
 	const chatModel = new ChatOpenAI({
 		temperature: 0,
@@ -108,7 +106,6 @@ export async function POST(req, res) {
 	})
 
 	let chatHistory = []
-
 	const messageWithoutLastUserQuestion = messages.slice(0, messages.length - 1)
 
 	messageWithoutLastUserQuestion.forEach(mssg => {
@@ -125,16 +122,10 @@ export async function POST(req, res) {
 	const streamedResult = await streamAndSaveMessage(
 		result,
 		conversationId,
+		conversationModelId,
 		userQuestion,
 		client
 	)
 
-	// await client.close()
-
-	cookies().set('conversationId', conversationId)
 	return new Response(streamedResult)
-
-	// return NextResponse.json({
-	// 	conversationId: conversationId,
-	// })
 }

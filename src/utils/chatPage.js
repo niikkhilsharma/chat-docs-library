@@ -14,7 +14,7 @@ function iteratorToStream(iterator) {
 	})
 }
 
-async function* makeIterator(result, conversationId, userQuestion, client) {
+async function* makeIterator(result, conversationId, conversationModelId, userQuestion, client) {
 	let aiMessage = ''
 	for await (const chunk of result) {
 		if (chunk.answer) {
@@ -23,30 +23,26 @@ async function* makeIterator(result, conversationId, userQuestion, client) {
 			yield encoder.encode(answer)
 		}
 	}
-	console.log(aiMessage)
-	saveMessage(conversationId, userQuestion, aiMessage, client)
+	console.log('from make iterator')
+	console.log(conversationId)
+	console.log(conversationModelId)
+	saveMessage(conversationId, conversationModelId, userQuestion, aiMessage, client)
 }
 
-export async function streamAndSaveMessage(
-	result,
-	conversationId,
-	userQuestion,
-	client
-) {
-	const iterator = makeIterator(result, conversationId, userQuestion, client)
+export async function streamAndSaveMessage(result, conversationId, conversationModelId, userQuestion, client) {
+	const iterator = makeIterator(result, conversationId, conversationModelId, userQuestion, client)
 	const stream = iteratorToStream(iterator)
 	return stream
 }
 
-async function saveMessage(
-	conversationId,
-	humanMessage = userQuestion,
-	aiMessage,
-	client
-) {
+async function saveMessage(conversationId, conversationModelId, humanMessage = userQuestion, aiMessage, client) {
+	console.log('from save Message')
+	console.log(conversationId)
+	console.log(conversationModelId)
 	const newMessage = await prisma.Message.create({
 		data: {
-			conversationId,
+			conversationId: conversationId,
+			conversationModelId: conversationModelId,
 			humanMessage,
 			aiMessage,
 		},

@@ -1,10 +1,25 @@
 'use client'
 
 import { useChat } from 'ai/react'
+import { useState } from 'react'
+
+function generateUniqueNumber() {
+	const timestamp = new Date().getTime()
+	const randomPart = Math.floor(Math.random() * 1000000)
+	const uniqueNumber = `${timestamp}${randomPart}`.slice(0, 12)
+
+	return uniqueNumber
+}
 
 export default function Home() {
+	const [conversationId, setConversationId] = useState(generateUniqueNumber())
+	// console.log(conversationId)
+
 	const { messages, input, handleInputChange, handleSubmit } = useChat({
 		api: '/api/docs/nextjs/query',
+		body: {
+			anonymousId: conversationId,
+		},
 	})
 
 	return (
