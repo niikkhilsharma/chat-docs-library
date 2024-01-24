@@ -23,9 +23,7 @@ async function* makeIterator(result, conversationId, conversationModelId, userQu
 			yield encoder.encode(answer)
 		}
 	}
-	console.log('from make iterator')
-	console.log(conversationId)
-	console.log(conversationModelId)
+	console.log('aiMessage', aiMessage)
 	saveMessage(conversationId, conversationModelId, userQuestion, aiMessage, client)
 }
 
@@ -36,19 +34,10 @@ export async function streamAndSaveMessage(result, conversationId, conversationM
 }
 
 async function saveMessage(conversationId, conversationModelId, humanMessage = userQuestion, aiMessage, client) {
-	console.log('from save Message')
-	console.log(conversationId)
-	console.log(conversationModelId)
 	const newMessage = await prisma.Message.create({
-		data: {
-			conversationId: conversationId,
-			conversationModelId: conversationModelId,
-			humanMessage,
-			aiMessage,
-		},
+		data: { conversationId: conversationId, conversationModelId: conversationModelId, humanMessage, aiMessage },
 	})
-	console.log(newMessage)
-
 	await client.close()
+
 	return { conversationId }
 }

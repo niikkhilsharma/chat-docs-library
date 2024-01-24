@@ -14,7 +14,7 @@ import { HumanMessage, AIMessage } from '@langchain/core/messages'
 import { NextResponse } from 'next/server'
 
 import prisma from '@/lib/database/prisma'
-import { streamAndSaveMessage } from '@/utils/chatPage'
+import { streamAndSaveMessage } from '@/utils/backend/chatPage'
 
 export async function POST(req, res) {
 	let { messages, anonymousId } = await req.json()
@@ -57,7 +57,9 @@ export async function POST(req, res) {
 		} else {
 			conversationModelId = prevConversation.id
 		}
-	} else { return NextResponse.json({ message: 'Please provide the conversationId' }, { status: 400 }) }
+	} else {
+		return NextResponse.json({ message: 'Please provide the conversationId' }, { status: 400 })
+	}
 
 	const chatModel = new ChatOpenAI({
 		temperature: 0,
@@ -119,13 +121,7 @@ export async function POST(req, res) {
 		input: userQuestion,
 	})
 
-	const streamedResult = await streamAndSaveMessage(
-		result,
-		conversationId,
-		conversationModelId,
-		userQuestion,
-		client
-	)
+	const streamedResult = await streamAndSaveMessage(result, conversationId, conversationModelId, userQuestion, client)
 
 	return new Response(streamedResult)
 }
