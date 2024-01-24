@@ -4,6 +4,9 @@ const nextConfig = {
 	images: {
 		domains: ['lh3.googleusercontent.com', 'avatars3.githubusercontent.com'],
 	},
+	httpAgentOptions: {
+		keepAlive: true,
+	},
 }
 
 module.exports = nextConfig
