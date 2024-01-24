@@ -17,6 +17,7 @@ import prisma from '@/lib/database/prisma'
 import { streamAndSaveMessage } from '@/utils/backend/chatPage'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth/auth'
+import { StreamingTextResponse } from 'ai'
 
 export async function POST(req, res) {
 	let { messages, anonymousId } = await req.json()
@@ -126,5 +127,6 @@ export async function POST(req, res) {
 
 	const streamedResult = await streamAndSaveMessage(result, conversationId, conversationModelId, userQuestion, client)
 
-	return new Response(streamedResult)
+	return new StreamingTextResponse(streamedResult)
+	// return new Response(streamedResult)
 }
