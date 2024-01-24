@@ -1,5 +1,3 @@
-export const runtime = 'edge'
-
 import { ChatOpenAI } from '@langchain/openai'
 import { OpenAIEmbeddings } from '@langchain/openai'
 
