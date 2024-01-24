@@ -15,10 +15,13 @@ import { NextResponse } from 'next/server'
 
 import prisma from '@/lib/database/prisma'
 import { streamAndSaveMessage } from '@/utils/backend/chatPage'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth/auth'
 
 export async function POST(req, res) {
 	let { messages, anonymousId } = await req.json()
-	const userId = '65a6d70c998834f0dafc8786'
+	const session = await getServerSession(authOptions)
+	const userId = session.user.id
 
 	//conversation Id is being called anoyomousId on frontend.
 	let conversationId = anonymousId
