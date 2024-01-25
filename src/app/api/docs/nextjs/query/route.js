@@ -19,6 +19,8 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth/auth'
 import { StreamingTextResponse } from 'ai'
 
+export const runtime = 'edge'
+
 export async function POST(req, res) {
 	let { messages, anonymousId } = await req.json()
 	const session = await getServerSession(authOptions)
@@ -127,10 +129,5 @@ export async function POST(req, res) {
 
 	const streamedResult = await streamAndSaveMessage(result, conversationId, conversationModelId, userQuestion, client)
 
-	return new StreamingTextResponse(streamedResult, {
-		headers: {
-			Connection: 'Keep-Alive',
-		},
-	})
-	// return new Response(streamedResult)
+	return new StreamingTextResponse(streamedResult)
 }

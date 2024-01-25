@@ -1,4 +1,5 @@
 import prisma from '@/lib/database/prisma'
+import { NextResponse } from 'next/server'
 const encoder = new TextEncoder()
 
 function iteratorToStream(iterator) {
@@ -24,7 +25,22 @@ async function* makeIterator(result, conversationId, conversationModelId, userQu
 		}
 	}
 	console.log('aiMessage', aiMessage)
-	saveMessage(conversationId, conversationModelId, userQuestion, aiMessage, client)
+
+	client.close()
+
+	try {
+		const res = fetch('http://localhost:3000/api/docs/nextjs/saveMsg', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ conversationId, conversationModelId, humanMessage: userQuestion, aiMessage }),
+		})
+	} catch (error) {
+		return NextResponse.json({ message: 'Error saving message' }, { status: 500 })
+	}
+
+	// saveMessage(conversationId, conversationModelId, userQuestion, aiMessage, client)
 }
 
 export async function streamAndSaveMessage(result, conversationId, conversationModelId, userQuestion, client) {
@@ -33,11 +49,11 @@ export async function streamAndSaveMessage(result, conversationId, conversationM
 	return stream
 }
 
-async function saveMessage(conversationId, conversationModelId, humanMessage = userQuestion, aiMessage, client) {
-	const newMessage = await prisma.Message.create({
-		data: { conversationId: conversationId, conversationModelId: conversationModelId, humanMessage, aiMessage },
-	})
-	await client.close()
+// async function saveMessage(conversationId, conversationModelId, humanMessage = userQuestion, aiMessage, client) {
+// 	const newMessage = await prisma.Message.create({
+// 		data: { conversationId: conversationId, conversationModelId: conversationModelId, humanMessage, aiMessage },
+// 	})
+// 	await client.close()
 
-	return { conversationId }
-}
+// 	return { conversationId }
+// }
