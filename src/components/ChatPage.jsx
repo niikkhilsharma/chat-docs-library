@@ -14,11 +14,24 @@ const ChatPage = () => {
 	const { data: session, status } = useSession()
 	const [conversationId, setConversationId] = useState(generateUniqueNumber())
 
+	const saveConversation = async () => {
+		await fetch('/api/r', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				conversationId,
+			}),
+		})
+	}
+
 	const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
 		api: '/api/docs/nextjs/query',
 		body: {
 			anonymousId: conversationId,
 		},
+		onFinish: saveConversation,
 	})
 
 	if (status === 'loading') {

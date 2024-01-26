@@ -19,7 +19,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth/auth'
 import { StreamingTextResponse } from 'ai'
 
-export const runtime = 'edge'
+// export const runtime = 'edge'
 
 export async function POST(req, res) {
 	let { messages, anonymousId } = await req.json()
@@ -72,7 +72,7 @@ export async function POST(req, res) {
 		streaming: true,
 	})
 
-	const client = new MongoClient(process.env.DATABASE_URL)
+	const client = new MongoClient(process.env.DB)
 	const collection = client.db('chat-docs-library').collection('NextJs')
 
 	const vectorStore = new MongoDBAtlasVectorSearch(new OpenAIEmbeddings(), {
