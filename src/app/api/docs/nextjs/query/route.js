@@ -128,5 +128,4 @@ export async function POST(req, res) {
 	const streamedResult = await streamAndSaveMessage(result, conversationId, conversationModelId, userQuestion, client)
 
 	return new StreamingTextResponse(streamedResult)
-	// return new Response(streamedResult)
 }
