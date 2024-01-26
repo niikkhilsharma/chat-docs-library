@@ -70,7 +70,7 @@ export async function POST(req, res) {
 		streaming: true,
 	})
 
-	const client = new MongoClient(process.env.DATABASE_URL)
+	const client = new MongoClient(process.env.DB_URL)
 	const collection = client.db('chat-docs-library').collection('NextJs')
 
 	const vectorStore = new MongoDBAtlasVectorSearch(new OpenAIEmbeddings(), {
