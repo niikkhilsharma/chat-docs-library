@@ -43,3 +43,8 @@ th:not(:last-child) {
 .scrollbar::-webkit-scrollbar-thumb:hover {
 	background: #c0a0b9;
 }
+
+/* For the chatPage.jsx */
+.modelIcon svg {
+	width: 2rem;
+}
