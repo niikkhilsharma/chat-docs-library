@@ -39,5 +39,5 @@ async function saveMessage(conversationId, conversationModelId, humanMessage = u
 	})
 	await client.close()
 
-	return { conversationId }
+	// return { conversationId }
 }

@@ -20,12 +20,10 @@ import { authOptions } from '@/lib/auth/auth'
 import { StreamingTextResponse } from 'ai'
 
 export async function POST(req, res) {
-	let { messages, anonymousId } = await req.json()
+	let { messages, conversationId } = await req.json()
+
 	const session = await getServerSession(authOptions)
 	const userId = session.user.id
-
-	//conversation Id is being called anoyomousId on frontend.
-	let conversationId = anonymousId
 
 	let userQuestion = messages[messages.length - 1].content
 
@@ -38,7 +36,7 @@ export async function POST(req, res) {
 		)
 	}
 
-	// This is the id of the conversation model in the database. It is being used to identify the chat history of the user wrt to same conversation.
+	// This is the id of the conversation model/object in the database. It is being used to identify the chat history of the user wrt to same conversation.
 	let conversationModelId
 
 	if (conversationId) {
@@ -47,7 +45,7 @@ export async function POST(req, res) {
 				conversationId: conversationId,
 			},
 		})
-		console.log(prevConversation)
+
 		if (!prevConversation) {
 			const newConversation = await prisma.Conversation.create({
 				data: {
@@ -96,7 +94,10 @@ export async function POST(req, res) {
 	})
 
 	const historyAwareRetrievalPrompt = ChatPromptTemplate.fromMessages([
-		['system', "Answer the user's questions based on the below context:\n\n{context}"],
+		[
+			'system',
+			"You're a chatbot. Trained on latest documentation of NextJs 14. You can answer questions related to NextJs 14. On the basis of the context provided below. \n\n If you don't know the answer, you can say 'I don't know' but don't try to make up an answer. context:\n\n{context}",
+		],
 		new MessagesPlaceholder('chat_history'),
 		['user', '{input}'],
 	])

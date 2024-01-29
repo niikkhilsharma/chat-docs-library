@@ -53,3 +53,27 @@ th:not(:last-child) {
 .modelIcon svg {
 	width: 2rem;
 }
+
+li {
+	margin: 0.25rem;
+	counter-increment: my-awesome-counter;
+	display: -webkit-inline-box;
+}
+li::before {
+	content: counter(my-awesome-counter);
+	background: #662974;
+	width: 1.5rem;
+	height: 1.5rem;
+	display: inline-block;
+	line-height: 1.5rem;
+	color: white;
+	text-align: center;
+	margin-right: 0.5rem;
+	border-radius: 50%;
+}
+ol ol li::before {
+	background: #de51ff;
+}
+ol ol ol li::before {
+	background: #ee9eff;
+}

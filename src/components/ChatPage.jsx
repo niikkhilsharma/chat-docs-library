@@ -17,7 +17,7 @@ const ChatPage = ({ currentModel, name }) => {
 	const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
 		api: `/api/docs/${currentModel}/query`,
 		body: {
-			anonymousId: conversationId,
+			conversationId,
 		},
 	})
 
