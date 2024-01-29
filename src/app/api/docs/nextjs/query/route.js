@@ -51,7 +51,7 @@ export async function POST(req, res) {
 				data: {
 					title: userQuestion.slice(0, 20),
 					userId: userId,
-					chatDocsCollectionName: 'NextJs',
+					modelName: 'NextJs',
 					conversationId: conversationId,
 				},
 			})

@@ -59,15 +59,15 @@ model VerificationToken {
 }
 
 model Conversation {
-  id                     String    @id @default(auto()) @map("_id") @db.ObjectId
-  title                  String
-  userId                 String    @db.ObjectId
-  chatDocsCollectionName String
-  conversationId         String    @unique
-  messages               Message[]
-  createdAt              DateTime  @default(now())
-  updatedAt              DateTime  @updatedAt
-  user                   User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  title          String
+  userId         String    @db.ObjectId
+  modelName      String
+  conversationId String    @unique
+  messages       Message[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Message {
