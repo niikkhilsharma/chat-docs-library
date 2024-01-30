@@ -96,8 +96,9 @@ export async function POST(req, res) {
 	const historyAwareRetrievalPrompt = ChatPromptTemplate.fromMessages([
 		[
 			'system',
-			"You're a chatbot. Trained on latest documentation of NextJs 14. You can answer questions related to NextJs 14. On the basis of the context provided below. \n\n If you don't know the answer, you can say 'I don't know' but don't try to make up an answer. context:\n\n{context}",
+			"You're a chatbot trained over Nextjs 14 documentation. You're task is to provided answer to the input on that basis of the context provided only. Make sure to answer from the context below only. Note if you don't know answer to any question just say 'I don't know' but don't try to make up an answer. context:\n\n{context}",
 		],
+		['system', 'The latest nextjs version in the market is 14.0.2'],
 		new MessagesPlaceholder('chat_history'),
 		['user', '{input}'],
 	])
