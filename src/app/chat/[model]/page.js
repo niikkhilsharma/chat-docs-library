@@ -103,7 +103,7 @@ export default async function Page({ params }) {
 									<span className="font-bold">All Models</span>
 									<span className="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">{allModels.length}</span>
 								</div>
-								<div className="flex flex-col space-y-1 mt-4 -mx-2 h-[30rem] overflow-y-auto">
+								<div className="flex flex-col space-y-1 mt-4 -mx-2 h-[20rem] overflow-y-auto">
 									{allModels.map((model, index) => (
 										<Link href={`/chat/${model.link}`} key={index}>
 											<div className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2">

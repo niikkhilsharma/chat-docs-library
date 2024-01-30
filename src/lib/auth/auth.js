@@ -6,6 +6,7 @@ import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import prisma from '../database/prisma'
 
 export const authOptions = {
+	pages: { signIn: '/auth/login' },
 	adapter: PrismaAdapter(prisma),
 	session: {
 		strategy: 'jwt',
