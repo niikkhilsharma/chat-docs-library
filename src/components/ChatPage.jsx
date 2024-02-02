@@ -50,8 +50,8 @@ const ChatPage = ({ currentModel, name }) => {
 											<div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0 text-white">
 												A
 											</div>
-											<div className="relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl overflow-scroll">
-												<div>
+											<div className="mr-3 text-sm py-2 px-4 shadow rounded-xl">
+												<div className="relative overflow-x-scroll max-w-60 sm:max-w-xs md:max-w-sm lg:max-w-xl xl:max-w-3xl">
 													<CustomMarkdown content={message.content} />
 												</div>
 											</div>

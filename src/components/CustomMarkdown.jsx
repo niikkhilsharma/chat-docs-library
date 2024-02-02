@@ -29,11 +29,7 @@ const CustomMarkdown = ({ content }) => {
 					)
 				},
 				p({ node, children, ...props }) {
-					return (
-						<p style={{ marginBottom: '1em' }} {...props}>
-							{children}
-						</p>
-					)
+					return <p {...props}>{children}</p>
 				},
 			}}
 			remarkPlugins={[remarkGfm]}
