@@ -1,0 +1,32 @@
+name: Deploy chat-docs-library to EC2
+
+on:
+ push:
+  branches:
+   - prod
+
+jobs:
+ deploy:
+  runs-on: ubuntu-latest
+
+  steps:
+   - name: Checkout Repository
+     uses: actions/checkout@v2
+
+   - name: Install Dependencies
+     run: npm install
+
+   - name: Build Application
+     run: npm run build
+
+   - name: Deploy to EC2
+     uses: appleboy/ssh-action@master
+     with:
+      host: 13.50.171.225
+      username: ubuntu
+      key: ${{ env.EC2_PRIVATE_KEY }}
+      script: |
+       cd  ../../chat-docs-library
+       git pull origin main
+       npm install
+       pm2 restart your-app
