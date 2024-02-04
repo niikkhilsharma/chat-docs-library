@@ -25,18 +25,11 @@ jobs:
    - name: Deploy to EC2
      uses: appleboy/ssh-action@v1.0.3
      with:
-      host: ${{ env.EC2_IP_ADDRESS }}
-      username: ${{ env.EC2_USERNAME }}
-      key: ${{ env.EC2_PRIVATE_KEY }}
+      host: ${{ secrets.EC2_IP_ADDRESS }}
+      username: ${{ secrets.EC2_USERNAME }}
+      key: ${{ secrets.EC2_PRIVATE_KEY }}
       script: |
        cd chat-docs-library
        git pull origin prod
        pnpm install
-       # Check if the application is already running
-       if pm2 pid chat-docs-library > /dev/null 2>&1; then
-         # If running, restart
-         pm2 restart chat-docs-library
-       else
-         # If not running, start
-         pm2 start chat-docs-library
-       fi
+       pm2 start chat-docs-library
