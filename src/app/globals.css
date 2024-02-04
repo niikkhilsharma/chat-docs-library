@@ -3,77 +3,23 @@
 @tailwind utilities;
 
 table {
-	@apply min-w-full divide-y divide-gray-200 my-4 text-center;
+	@apply sm:px-2 divide-y divide-gray-200 my-4 text-center;
 }
 
 thead {
 	@apply border-2 border-gray-400 overflow-hidden rounded-xl;
 }
 th {
-	@apply px-6 py-3 text-xs font-medium text-white uppercase text-center bg-gray-700 hover:bg-gray-900 cursor-pointer;
+	@apply p-3 text-xs font-medium text-white uppercase text-center bg-gray-700 hover:bg-gray-900 cursor-pointer;
 }
 tr {
 	@apply odd:bg-gray-50 even:bg-gray-700/15 hover:bg-blue-300;
 }
 
 td {
-	@apply px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 border-2 border-gray-400;
+	@apply p-1 sm:p-2 text-xs sm:text-sm font-medium text-gray-800 border-2 border-gray-400 lg:max-w-sm;
 }
 td:not(:last-child),
 th:not(:last-child) {
 	@apply border-r-2 border-gray-400;
-}
-
-.scrollbar::-webkit-scrollbar {
-	width: 1em;
-}
-
-@media screen and (max-width: 640px) {
-	.scrollbar::-webkit-scrollbar {
-		width: 0.3em;
-	}
-}
-
-.scrollbar::-webkit-scrollbar-track {
-	border-radius: 100vh;
-	background: #f7f4ed;
-	box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-}
-
-.scrollbar::-webkit-scrollbar-thumb {
-	border-radius: 100vh;
-	background-color: darkgrey;
-}
-
-.scrollbar::-webkit-scrollbar-thumb:hover {
-	background: #c0a0b9;
-}
-
-/* For the chatPage.jsx */
-.modelIcon svg {
-	width: 2rem;
-}
-
-li {
-	margin: 0.25rem;
-	counter-increment: my-awesome-counter;
-	display: -webkit-inline-box;
-}
-li::before {
-	content: counter(my-awesome-counter);
-	background: #662974;
-	width: 1.5rem;
-	height: 1.5rem;
-	display: inline-block;
-	line-height: 1.5rem;
-	color: white;
-	text-align: center;
-	margin-right: 0.5rem;
-	border-radius: 50%;
-}
-ol ol li::before {
-	background: #de51ff;
-}
-ol ol ol li::before {
-	background: #ee9eff;
 }

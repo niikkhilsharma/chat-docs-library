@@ -22,19 +22,19 @@ const ChatPage = ({ currentModel, name }) => {
 	})
 
 	return (
-		<div className="flex flex-col flex-auto h-full  p-3 sm:p-6">
-			<div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4 ">
+		<div className="flex flex-col flex-auto h-full p-2 sm:p-6">
+			<div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full py-4 sm:p-4 ">
 				<span className="inline-block sm:hidden text-center font-bold italic">
 					Model: {currentModel[0].toUpperCase() + currentModel.slice(1)}
 				</span>
 				<div className="flex flex-col h-full overflow-x-auto mb-4">
 					<div className="flex flex-col h-full">
-						<div className="grid grid-cols-12 gap-y-2 overflow-x-auto scrollbar">
+						<div className="grid grid-cols-12 gap-y-2">
 							{messages.map(message =>
 								message.role === 'user' ? (
-									<div className="col-start-1 col-end-12 sm:col-end-8 p-3 rounded-lg" key={message.id}>
+									<div className="col-start-1 col-end-12 lg:col-end-8 p-3 rounded-lg" key={message.id}>
 										<div className="flex flex-row items-center">
-											<div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0 text-white">
+											<div className="flex items-center justify-center w-6 h-6 md:h-10 md:w-10 rounded-full bg-indigo-500 flex-shrink-0 text-white">
 												{name[0]}
 											</div>
 											<div className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl">
@@ -45,21 +45,19 @@ const ChatPage = ({ currentModel, name }) => {
 										</div>
 									</div>
 								) : (
-									<div className="col-start-1 sm:col-start-3 col-end-13 p-3 rounded-lg" key={message.id}>
-										<div className="flex items-center justify-start flex-row-reverse">
-											<div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0 text-white">
+									<div className="col-start-1 md:col-start-2 col-end-13 p-3 rounded-lg" key={message.id}>
+										<div className="flex items-center justify-end sm:justify-start flex-row-reverse">
+											<div className="flex items-center justify-center w-6 h-6 md:h-10 md:w-10 rounded-full bg-indigo-500 flex-shrink-0 text-white">
 												A
 											</div>
-											<div className="mr-3 text-sm py-2 px-4 shadow rounded-xl">
-												<div className="relative overflow-x-scroll max-w-60 sm:max-w-xs md:max-w-sm lg:max-w-xl xl:max-w-3xl">
-													<CustomMarkdown content={message.content} />
-												</div>
+											<div className="w-full mr-2 sm:mr-3 text-sm py-2 px-2 sm:px-4 shadow rounded-xl">
+												<CustomMarkdown content={message.content} />
 											</div>
 										</div>
 									</div>
 								)
 							)}
-							<span className="hidden scrollMeToView"></span>
+							{/* <span className="hidden scrollMeToView"></span> */}
 						</div>
 					</div>
 				</div>
