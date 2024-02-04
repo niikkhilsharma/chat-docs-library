@@ -32,4 +32,5 @@ jobs:
        cd chat-docs-library
        git pull origin prod
        pnpm install
-       pm2 start npm --name chat-docs-library -- run start -- -p 3000
+       pm2 restart chat-docs-library
+      #  pm2 start npm --name chat-docs-library -- run start -- -p 3000
