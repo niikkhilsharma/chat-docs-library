@@ -23,7 +23,7 @@ jobs:
      run: pnpm build
 
    - name: Deploy to EC2
-     uses: appleboy/ssh-action@latest
+     uses: appleboy/ssh-action
      with:
       host: ${{ env.EC2_IP_ADDRESS }}
       username: ${{ env.EC2_USERNAME }}
