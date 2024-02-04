@@ -22,8 +22,8 @@ jobs:
    - name: Deploy to EC2
      uses: appleboy/ssh-action@master
      with:
-      host: 13.50.171.225
-      username: ubuntu
+      host: ${{ env.EC2_IP_ADDRESS }}
+      username: ${{ env.EC2_USERNAME }}
       key: ${{ env.EC2_PRIVATE_KEY }}
       script: |
        cd  ../../chat-docs-library
