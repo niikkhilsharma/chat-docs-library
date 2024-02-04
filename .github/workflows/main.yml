@@ -30,6 +30,13 @@ jobs:
       key: ${{ env.EC2_PRIVATE_KEY }}
       script: |
        cd chat-docs-library
-       git pull
+       git pull origin prod
        pnpm install
-       pm2 restart chat-docs-library
+       # Check if the application is already running
+       if pm2 pid chat-docs-library > /dev/null 2>&1; then
+         # If running, restart
+         pm2 restart chat-docs-library
+       else
+         # If not running, start
+         pm2 start chat-docs-library
+       fi
