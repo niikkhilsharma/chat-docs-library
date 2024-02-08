@@ -76,8 +76,7 @@ export async function POST(req, res) {
 		// You're index name should be same as you've passed in train/route.js
 		indexName: 'default', // The name of the Atlas search index. Defaults to "default"
 	})
-	const retriever = vectorStore.asRetriever((k = 5))
-
+	const retriever = vectorStore.asRetriever({ k: 7 })
 	const historyAwarePrompt = ChatPromptTemplate.fromMessages([
 		new MessagesPlaceholder('chat_history'),
 		['user', '{input}'],
@@ -93,7 +92,7 @@ export async function POST(req, res) {
 	const historyAwareRetrievalPrompt = ChatPromptTemplate.fromMessages([
 		[
 			'system',
-			"You're a chatbot trained over Nextjs 14 documentation. You're task is to provided answer to the input on that basis of the context provided only. Make sure to answer from the context below only. Note if you don't know answer to any question just say 'I don't know' but don't try to make up an answer. context= \n\n{context}",
+			'The latest nextjs documentation is released with the latest version 14.0.2. I will provide you with a question based on nextjs and also provide you some context related to that question, and that context will contain the answer to the question. You have to take the context and answer the question on the basis of the context. It is strictly advised not to make up your own answer if you think the context is not enough to answer the question. If you don’t know the answer, just say “I don’t know”. And if the context is insufficient you can say provide more context. And also write code sample when ever possible. Make sure that you read the context and try to learn from it as the new Nextjs update consis of a lot many new things. Everything provided in context is correct and you have to write the answer after learning from it only. Try to copy the whole context. Exacly copy the import path from the context do not take any previous or you own import routes. Context= {context}',
 		],
 		['system', 'The latest nextjs version in the market is 14.0.2'],
 		new MessagesPlaceholder('chat_history'),
