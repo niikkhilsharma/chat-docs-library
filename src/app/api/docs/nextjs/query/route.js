@@ -76,15 +76,12 @@ export async function POST(req, res) {
 		// You're index name should be same as you've passed in train/route.js
 		indexName: 'default', // The name of the Atlas search index. Defaults to "default"
 	})
-	const retriever = vectorStore.asRetriever()
+	const retriever = vectorStore.asRetriever((k = 5))
 
 	const historyAwarePrompt = ChatPromptTemplate.fromMessages([
 		new MessagesPlaceholder('chat_history'),
 		['user', '{input}'],
-		[
-			'user',
-			'Given the above conversation, generate a search query to look up in order to get information relevant to the conversation',
-		],
+		['user', 'From the input given generate a search query to look for the answer in the Nextjs 14 documentation.'],
 	])
 
 	const historyAwareRetrieverChain = await createHistoryAwareRetriever({
@@ -96,7 +93,7 @@ export async function POST(req, res) {
 	const historyAwareRetrievalPrompt = ChatPromptTemplate.fromMessages([
 		[
 			'system',
-			"You're a chatbot trained over Nextjs 14 documentation. You're task is to provided answer to the input on that basis of the context provided only. Make sure to answer from the context below only. Note if you don't know answer to any question just say 'I don't know' but don't try to make up an answer. context:\n\n{context}",
+			"You're a chatbot trained over Nextjs 14 documentation. You're task is to provided answer to the input on that basis of the context provided only. Make sure to answer from the context below only. Note if you don't know answer to any question just say 'I don't know' but don't try to make up an answer. context= \n\n{context}",
 		],
 		['system', 'The latest nextjs version in the market is 14.0.2'],
 		new MessagesPlaceholder('chat_history'),
