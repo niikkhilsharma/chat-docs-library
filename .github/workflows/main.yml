@@ -30,5 +30,5 @@ jobs:
        git pull origin prod
        pnpm
        pnpm run build
-       pm2 restart chat-docs-library
+      #  pm2 restart chat-docs-library
       #  pm2 start npm --name chat-docs-library -- run start -- -p 3000
