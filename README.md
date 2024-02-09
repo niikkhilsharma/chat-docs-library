@@ -9,3 +9,7 @@ Rules:
 1. Make sure to replace the import for the prisma from the prisme edge instead of client.
 2. Make sure to change the NEXTAUTH_URL in the .env file.
 3. Make sure to change the DATABASE_URL to the prisma accelerate one and also to see the DB_URL is set to mongodb Url in the .env file.
+
+
+
+

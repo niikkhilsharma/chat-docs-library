@@ -46,7 +46,7 @@ const ChatPage = ({ currentModel, name }) => {
 									</div>
 								) : (
 									<div className="col-start-1 md:col-start-2 col-end-13 p-3 rounded-lg" key={message.id}>
-										<div className="flex items-center justify-end sm:justify-start flex-row-reverse">
+										<div className="flex items-center justify-start sm:justify-start flex-row-reverse">
 											<div className="flex items-center justify-center w-6 h-6 md:h-10 md:w-10 rounded-full bg-indigo-500 flex-shrink-0 text-white">
 												A
 											</div>
