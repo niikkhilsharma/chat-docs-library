@@ -14,10 +14,10 @@ jobs:
      uses: actions/checkout@v2
 
    - name: Install Dependencies
-     run: yarn
+     run: pnmp install
 
    - name: Build Application
-     run: yarn build
+     run: pnpm run build
 
    - name: Deploy to EC2
      uses: appleboy/ssh-action@v1.0.3
@@ -28,7 +28,7 @@ jobs:
       script: |
        cd chat-docs-library
        git pull origin prod
-       pnpm
+       pnpm install
       #  pnpm run build
       #  pm2 restart chat-docs-library
       #  pm2 start npm --name chat-docs-library -- run start -- -p 3000
