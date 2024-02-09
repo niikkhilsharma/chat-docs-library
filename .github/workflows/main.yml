@@ -13,13 +13,7 @@ jobs:
    - name: Checkout Repository
      uses: actions/checkout@v2
 
-   - name: Install Dependencies
-     run: pnpm install
-
-   - name: Build Application
-     run: pnpm run build
-
-   - name: Deploy to EC2
+   - name: Pull and install in EC2
      uses: appleboy/ssh-action@v1.0.3
      with:
       host: ${{ secrets.EC2_IP_ADDRESS }}
