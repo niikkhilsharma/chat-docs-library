@@ -39,4 +39,5 @@ next-env.d.ts
 
 .gitub/workflows/main.yml
 .github
+.github/*
 chat-docs-library.pem
