@@ -21,8 +21,9 @@ jobs:
       key: ${{ secrets.EC2_PRIVATE_KEY }}
       script: |
        cd chat-docs-library
-       git pull origin prod
+       git pull
        pnpm install
+       rm -rf .next
       #  pnpm run build
       #  pm2 restart chat-docs-library
       #  pm2 start npm --name chat-docs-library -- run start -- -p 3000
