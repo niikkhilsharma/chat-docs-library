@@ -22,14 +22,26 @@ const ChatPage = ({ currentModel, name }) => {
 	})
 
 	return (
-		<div className="flex flex-col flex-auto h-full p-2 sm:p-6">
+		<div className="flex flex-col flex-auto h-full p-1 sm:p-6">
 			<div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full py-4 sm:p-4 ">
 				<span className="inline-block sm:hidden text-center font-bold italic">
 					Model: {currentModel[0].toUpperCase() + currentModel.slice(1)}
 				</span>
-				<div className="flex flex-col h-full overflow-x-auto mb-4">
+				<div className="flex flex-col h-full overflow-x-auto sm:mb-4">
 					<div className="flex flex-col h-full">
-						<div className="grid grid-cols-12 gap-y-2">
+						<div className="grid grid-cols-12 gap-y-2 items-center">
+							{messages.length === 0 && (
+								<div className="col-start-1 col-end-13 p-3 rounded-lg" key={generateUniqueNumber()}>
+									<div className="flex items-center justify-center">
+										<div className="relative text-sm bg-white py-2 px-4 shadow rounded-xl">
+											<div>
+												<CustomMarkdown content="Hello! How can I help you today? I'm a chatbot trained over Nextjs 14 Documentation." />
+											</div>
+										</div>
+									</div>
+								</div>
+							)}
+
 							{messages.map(message =>
 								message.role === 'user' ? (
 									<div className="col-start-1 col-end-12 lg:col-end-8 p-3 rounded-lg" key={message.id}>
@@ -57,7 +69,6 @@ const ChatPage = ({ currentModel, name }) => {
 									</div>
 								)
 							)}
-							{/* <span className="hidden scrollMeToView"></span> */}
 						</div>
 					</div>
 				</div>

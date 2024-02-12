@@ -135,7 +135,6 @@ export default function Home() {
 								quality={100}
 								className="rounded-md bg-white p-2 sm:p-8 md:p-20 shadow-2xl ring-1 ring-gray-900/10"
 							/>
-							x
 						</div>
 					</div>
 				</div>
