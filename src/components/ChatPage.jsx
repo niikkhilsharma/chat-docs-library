@@ -92,7 +92,7 @@ const ChatPage = ({ currentModel, name }) => {
 						</button>
 					</div>
 					<div className="flex-grow ml-4">
-						<div className="relative w-full">
+						<div className="relative w-full dark:text-white">
 							<input
 								type="text"
 								value={input}
