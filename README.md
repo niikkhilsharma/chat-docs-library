@@ -1,3 +1,6 @@
+# Chat-Docs-Library ✨🤖💻🗃️
+An AI-powered PDF chat built with Next.js 14, Langchain, and Prisma
+
 ## ✨ What we provide ✨
 🚀 Revolutionize tech learning with conversation! Say farewell to static docs—our AI-powered platform guides you through tech info effortlessly. 💬 Join the conversation now!
 
