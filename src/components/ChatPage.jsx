@@ -35,7 +35,11 @@ const ChatPage = ({ currentModel, name }) => {
 									<div className="flex items-center justify-center">
 										<div className="relative text-sm bg-white py-2 px-4 shadow rounded-xl">
 											<div>
-												<CustomMarkdown content="Hello! How can I help you today? I'm a chatbot trained over Nextjs 14 Documentation." />
+												We've reached our limit of OPENAI API uses due to high users. Kindy wait for next month till our credits
+												gets renewed.
+												<p>Sorry for unconvinience.</p>
+												<p>We are planning to bring a paid plan. </p>
+												<p>Thank You 🙏🏻</p>
 											</div>
 										</div>
 									</div>
