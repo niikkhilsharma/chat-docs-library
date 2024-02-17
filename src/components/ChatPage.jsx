@@ -37,10 +37,10 @@ const ChatPage = ({ currentModel, name }) => {
 											<div className="text-center space-y-2">
 												<p>🔄 Sorry for any inconvenience.</p>
 												<p>
-													We've hit our OPENAI API usage limit due to high demand. Please bear with us until next month when our
+													We&apos;ve hit our OPENAI API usage limit due to high demand. Please bear with us until next month when our
 													credits renew.
 												</p>
-												<p>We're considering introducing a paid plan 💳 🔜.</p>
+												<p>We&apos;re considering introducing a paid plan 💳 🔜.</p>
 												<p>Thank you for your understanding. 🙏🏻</p>
 											</div>
 										</div>
