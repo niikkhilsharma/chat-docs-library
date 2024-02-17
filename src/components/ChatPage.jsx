@@ -34,12 +34,14 @@ const ChatPage = ({ currentModel, name }) => {
 								<div className="col-start-1 col-end-13 p-3 rounded-lg" key={generateUniqueNumber()}>
 									<div className="flex items-center justify-center">
 										<div className="relative text-sm bg-white py-2 px-4 shadow rounded-xl">
-											<div>
-												We&#39;ve reached our limit of OPENAI API uses due to high users. Kindy wait for next month till our credits
-												gets renewed.
-												<p>Sorry for unconvinience.</p>
-												<p>We are planning to bring a paid plan. </p>
-												<p>Thank You 🙏🏻</p>
+											<div className="text-center space-y-2">
+												<p>🔄 Sorry for any inconvenience.</p>
+												<p>
+													We've hit our OPENAI API usage limit due to high demand. Please bear with us until next month when our
+													credits renew.
+												</p>
+												<p>We're considering introducing a paid plan 💳 🔜.</p>
+												<p>Thank you for your understanding. 🙏🏻</p>
 											</div>
 										</div>
 									</div>
@@ -107,7 +109,8 @@ const ChatPage = ({ currentModel, name }) => {
 										handleSubmit(e)
 									}
 								}}
-								disabled={isLoading ? true : false}
+								// disabled={isLoading ? true : false}
+								disabled={true}
 								className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
 							/>
 							{emojiPickerVisible && (
